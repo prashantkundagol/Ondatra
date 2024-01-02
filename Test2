@@ -1,0 +1,14 @@
+func TestTrafficForwarding(t *testing.T) {
+    // Create an Ondatra client
+    client := ondatra.NewClient()
+
+    // Access two devices in the testbed
+    device1 := client.Device("device1")
+    device2 := client.Device("device2")
+
+    // Send a ping from device1 to device2
+    device1.Ping(device2.IP())
+
+    // Assert that the ping was successful
+    assert.True(t, device1.LastPingSuccess())
+}
