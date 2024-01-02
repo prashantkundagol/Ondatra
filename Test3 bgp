@@ -1,0 +1,16 @@
+func TestBGPSession(t *testing.T) {
+    // Create an Ondatra client
+    client := ondatra.NewClient()
+
+    // Access two devices in the testbed
+    device1 := client.Device("device1")
+    device2 := client.Device("device2")
+
+    // Configure BGP peers between the devices
+    device1.ConfigureBGPPeer(device2.IP(), "10.0.0.10")
+    device2.ConfigureBGPPeer(device1.IP(), "10.0.0.20")
+
+    // Assert that BGP sessions are established
+    assert.True(t, device1.BGPSessionUp(device2.IP()))
+    assert.True(t, device2.BGPSessionUp(device1.IP()))
+}
