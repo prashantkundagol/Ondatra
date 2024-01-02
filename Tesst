@@ -1,0 +1,19 @@
+func TestInterfaceState(t *testing.T) {
+    // Create an Ondatra client
+    client := ondatra.NewClient()
+
+    // Navigate to a device in the testbed
+    device := client.Device("test-device")
+
+    // Access an interface
+    interface := device.Interface("eth1")
+
+    // Configure the interface with an IP address
+    interface.SetIP("192.168.1.10/24")
+
+    // Assert that the interface is administratively up
+    assert.True(t, interface.IsUp())
+
+    // Assert that the interface has the expected IP address
+    assert.Equal(t, "192.168.1.10/24", interface.IP())
+}
