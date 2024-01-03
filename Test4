@@ -1,0 +1,23 @@
+package integration_test
+
+import (
+    "testing"
+    "github.com/openconfig/ondatra"
+    // ... other required packages
+)
+
+func TestMain(m *testing.M) {
+    ondatra.RunTests(m, initTestbed)
+}
+
+func TestGNMIConfig(t *testing.T) {
+    dut := ondatra.DUT(t, "dut")
+    port := dut.Port(t, "port1")
+
+    // Configure an IP address on the interface
+    iface := &oc.Interface{}
+    iface.SetName(port.Name())
+    addr := iface.GetOrCreateSubinterface(0).GetOrCreateIpv4().GetOrCreateAddress("10.0.0.1")
+    addr.SetPrefixLength(30)
+
+    gnmi.Replace(t, dut, gnmi.OC().Interface(port.Name()).Config
