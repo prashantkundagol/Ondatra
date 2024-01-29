@@ -1,0 +1,35 @@
+package main
+
+import (
+	"fmt"
+	"github.com/openconfig/ondatra/errors"
+	"github.com/openconfig/ondatra/execute"
+	"github.com/openconfig/ondatra/ping"
+	"github.com/openconfig/ondatra/test"
+)
+
+func TestRouterPing(t *testing.T) {
+	device, err := ondatra.NewDevice("10.133.35.138", "tcs123")
+	if err != nil {
+		t.Fatal("Error connecting to device:", err)
+	}
+	defer device.Disconnect()
+
+	// Ondatra has built-in ping functionality.
+	results, err := ping.ExecutePing(device, "10.133.35.158", 4)
+	if err != nil {
+		t.Error("Error executing ping:", err)
+	}
+
+	if results.PacketLoss > 0 {
+		t.Errorf("Ping to 10.133.35.158 failed with %d%% packet loss", results.PacketLoss)
+	}
+
+	// Print the output for debugging
+	fmt.Println(results)
+}
+
+// Mark this test as expected to fail, as Ondatra's ping functionality doesn't intentionally produce failures.
+func TestRouterPingFail(t *testing.T) {
+	t.Skip("Skipping test due to Ondatra's ping not supporting intentional failures")
+}
