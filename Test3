@@ -1,0 +1,21 @@
+package main
+
+import (
+    "fmt"
+    "net"
+)
+
+func main() {
+    // Replace with a placeholder hostname or IP address
+    targetHost := "example.com"
+
+    conn, err := net.Dial("tcp", targetHost+":80") // Example using port 80
+    if err != nil {
+        fmt.Println("Error dialing:", err)
+        return
+    }
+
+    defer conn.Close()
+
+    // Perform safe operations on the connection (e.g., send non-sensitive data)
+}
