@@ -1,0 +1,25 @@
+package main
+
+import (
+    "github.com/netmiko/netmiko"
+)
+
+func main() {
+    // Create connection object with placeholders for credentials
+    conn := netmiko.ConnectHandler(
+        device_type="cisco_nxos",
+        ip="10.133.35.1143",
+        username="username",
+        password="password"
+    )
+
+    // Execute commands and retrieve output
+    output, err := conn.SendCommand("show version")
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(output)
+
+    // Close the connection
+    conn.Disconnect()
+}
