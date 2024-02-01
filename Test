@@ -1,0 +1,22 @@
+package main
+
+import (
+    "testing"
+)
+
+func TestInterfaceStatus(t *testing.T) {
+    // Connect to the device using a secure method (placeholder for illustrative purposes)
+    conn := connectToDevice("10.133.35.1143", "username", "password")
+    defer conn.Close()
+
+    // Execute commands to check interface status
+    output, err := conn.Execute("show interface status")
+    if err != nil {
+        t.Errorf("Error executing command: %v", err)
+    }
+
+    // Parse output and verify interface status
+    if !strings.Contains(output, "Ethernet1/1 is up") {
+        t.Errorf("Interface Ethernet1/1 is not up")
+    }
+}
