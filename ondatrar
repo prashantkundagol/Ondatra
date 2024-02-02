@@ -1,0 +1,592 @@
+// Copyright 2024 Your Company
+
+package router
+
+import (
+	"testing"
+)
+
+func TestConnectivityCheck(t *testing.T) {
+	tests := []struct {
+		desc        string
+		ipAddress   string
+		expectError bool
+	}{
+		{
+			desc:        "valid IP",
+			ipAddress:   "192.168.1.1",
+			expectError: false,
+		},
+		{
+			desc:        "invalid IP",
+			ipAddress:   "invalid",
+			expectError: true,
+		},
+		{
+			desc:        "empty IP",
+			ipAddress:   "",
+			expectError: true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.desc, func(t *testing.T) {
+			// Assuming ConnectivityCheck is a function that you want to test.
+			// You would replace this with your actual function call.
+			err := ConnectivityCheck(test.ipAddress)
+
+			if (err != nil) != test.expectError {
+				t.Errorf("TestConnectivityCheck() for IP '%s' got error %v, expectError %v", test.ipAddress, err, test.expectError)
+			}
+		})
+	}
+}
+
+// ConnectivityCheck is a hypothetical function that you want to test.
+func ConnectivityCheck(ipAddress string) error {
+	// Your implementation of ConnectivityCheck goes here.
+
+	// For the sake of this example, let's assume it returns an error for empty or "invalid" IP addresses.
+	if ipAddress == "" || ipAddress == "invalid" {
+		return SomeError("Invalid IP address")
+	}
+
+	// Otherwise, it's considered a valid IP.
+	return nil
+}
+
+
+// SomeError is a custom error type for demonstration purposes.
+type SomeError string
+
+func (e SomeError) Error() string {
+	return string(e)
+}
+
+
+-------------------------------------------------------
+// Assuming the router IP is 10.133.35.158
+// Assuming the router username is admin
+// Assuming the router password is pck987
+
+// ...
+
+func TestRouterStatus(t *testing.T) {
+	routerIP := "10.133.35.158"
+	username := "admin"
+	password := "pck987"
+
+	tests := []struct {
+		desc         string
+		routerID     string
+		expectedInfo string
+		expectError  bool
+	}{
+		{
+			desc:         "valid router ID - router online",
+			routerID:     "router123",
+			expectedInfo: "Router is online",
+			expectError:  false,
+		},
+		{
+			desc:         "valid router ID - router offline",
+			routerID:     "router456",
+			expectedInfo: "Router is offline",
+			expectError:  false,
+		},
+		{
+			desc:         "invalid router ID",
+			routerID:     "",
+			expectedInfo: "",
+			expectError:  true,
+		},
+		{
+			desc:         "valid router ID - specific IP check",
+			routerID:     routerIP,
+			expectedInfo: "Router is online",
+			expectError:  false,
+		},
+		{
+			desc:         "valid router ID with credentials",
+			routerID:     routerIP,
+			expectedInfo: "Router is online",
+			expectError:  false,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.desc, func(t *testing.T) {
+			// Assuming RouterStatus is a function that you want to test.
+			// You would replace this with your actual function call.
+			info, err := RouterStatusWithCredentials(test.routerID, username, password)
+
+			if (err != nil) != test.expectError {
+				t.Errorf("TestRouterStatus() for router ID '%s' got error %v, expectError %v", test.routerID, err, test.expectError)
+			}
+
+			if info != test.expectedInfo {
+				t.Errorf("TestRouterStatus() for router ID '%s' got info %s, expectedInfo %s", test.routerID, info, test.expectedInfo)
+			}
+		})
+	}
+}
+
+// ...
+
+// RouterStatusWithCredentials is an updated hypothetical function that includes username and password parameters.
+func RouterStatusWithCredentials(routerID, username, password string) (string, error) {
+	// Your updated implementation of RouterStatus goes here.
+
+	// For the sake of this example, let's assume it returns an error for an empty router ID.
+	if routerID == "" {
+		return "", SomeError("Invalid router ID")
+	}
+
+	// For demonstration, let's say the router with ID "router123" is online, and others are offline.
+	if routerID == "router123" {
+		// Additional logic here for checking username and password.
+		// You would replace this with your actual authentication logic.
+
+		return "Router is online", nil
+	}
+
+	return "Router is offline", nil
+}
+
+// ...
+-----------------------------------------------------------------------------------------------------------
+// Copyright 2024 Your Company
+
+package router
+
+import (
+	"testing"
+)
+
+func TestSendCommandToRouter(t *testing.T) {
+	routerIP := "10.133.35.158"
+	username := "admin"
+	password := "pck987"
+
+	tests := []struct {
+		desc         string
+		command      string
+		expectedResp string
+		expectError  bool
+	}{
+		{
+			desc:         "valid command - success",
+			command:      "show status",
+			expectedResp: "Status: OK",
+			expectError:  false,
+		},
+		{
+			desc:         "invalid command",
+			command:      "invalid command",
+			expectedResp: "",
+			expectError:  true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.desc, func(t *testing.T) {
+			// Assuming SendCommandToRouter is a function that you want to test.
+			// You would replace this with your actual function call.
+			resp, err := SendCommandToRouter(routerIP, username, password, test.command)
+
+			if (err != nil) != test.expectError {
+				t.Errorf("TestSendCommandToRouter() for command '%s' got error %v, expectError %v", test.command, err, test.expectError)
+			}
+
+			if resp != test.expectedResp {
+				t.Errorf("TestSendCommandToRouter() for command '%s' got response %s, expectedResp %s", test.command, resp, test.expectedResp)
+			}
+		})
+	}
+}
+
+// SendCommandToRouter is a hypothetical function that you want to test.
+func SendCommandToRouter(routerIP, username, password, command string) (string, error) {
+	// Your implementation of SendCommandToRouter goes here.
+
+	// For the sake of this example, let's assume it returns a response for a valid command.
+	// You may want to add authentication logic using the provided username and password.
+	if command == "show status" {
+		return "Status: OK", nil
+	}
+
+	// For demonstration, return an error for an invalid command.
+	return "", SomeError("Invalid command")
+}
+
+// ...
+
+--------------------------------------------------------------------------
+configuration update
+
+package router
+
+import (
+	"testing"
+)
+
+// UpdateRouterConfiguration updates the configuration of the router.
+func UpdateRouterConfiguration(routerIP, username, password, config string) error {
+	// Your implementation goes here.
+
+	// For the sake of this example, let's assume it returns an error for an empty configuration.
+	if config == "" {
+		return SomeError("Empty configuration provided")
+	}
+
+	// Additional logic here for updating the router configuration.
+	// You would replace this with your actual configuration update logic.
+
+	return nil
+}
+
+// TestUpdateRouterConfiguration tests the UpdateRouterConfiguration function.
+func TestUpdateRouterConfiguration(t *testing.T) {
+	routerIP := "10.133.35.158"
+	username := "admin"
+	password := "pck987"
+
+	tests := []struct {
+		desc        string
+		config      string
+		expectError bool
+	}{
+		{
+			desc:        "valid configuration - success",
+			config:      "interface Ethernet0/0\n  ip address 192.168.1.1",
+			expectError: false,
+		},
+		{
+			desc:        "empty configuration",
+			config:      "",
+			expectError: true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.desc, func(t *testing.T) {
+			err := UpdateRouterConfiguration(routerIP, username, password, test.config)
+
+			if (err != nil) != test.expectError {
+				t.Errorf("TestUpdateRouterConfiguration() for config '%s' got error %v, expectError %v", test.config, err, test.expectError)
+			}
+		})
+	}
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+Router configuration 
+
+
+package router
+
+import (
+	"testing"
+)
+
+// RetrieveRouterConfiguration retrieves the current configuration of the router.
+func RetrieveRouterConfiguration(routerIP, username, password string) (string, error) {
+	// Your implementation goes here.
+
+	// Additional logic here for retrieving the router configuration.
+	// You would replace this with your actual configuration retrieval logic.
+
+	// For the sake of this example, let's assume it returns a sample configuration.
+	return "interface Ethernet0/0\n  ip address 192.168.1.1", nil
+}
+
+// TestRetrieveRouterConfiguration tests the RetrieveRouterConfiguration function.
+func TestRetrieveRouterConfiguration(t *testing.T) {
+	routerIP := "10.133.35.158"
+	username := "admin"
+	password := "pck987"
+
+	expectedConfig := "interface Ethernet0/0\n  ip address 192.168.1.1"
+
+	t.Run("valid configuration retrieval", func(t *testing.T) {
+		config, err := RetrieveRouterConfiguration(routerIP, username, password)
+
+		if err != nil {
+			t.Errorf("TestRetrieveRouterConfiguration() got unexpected error: %v", err)
+		}
+
+		if config != expectedConfig {
+			t.Errorf("TestRetrieveRouterConfiguration() got config %s, expectedConfig %s", config, expectedConfig)
+		}
+	})
+}
+----------------------------------------------------------------------------------------------------------------------------
+Router firmateware update
+package router
+
+import (
+	"testing"
+)
+
+// UpdateRouterFirmware initiates a firmware update on the router.
+func UpdateRouterFirmware(routerIP, username, password, firmwareVersion string) error {
+	// Your implementation goes here.
+
+	// For the sake of this example, let's assume it returns an error for an empty firmware version.
+	if firmwareVersion == "" {
+		return SomeError("Empty firmware version provided")
+	}
+
+	// Additional logic here for initiating the router firmware update.
+	// You would replace this with your actual firmware update logic.
+
+	return nil
+}
+
+// TestUpdateRouterFirmware tests the UpdateRouterFirmware function.
+func TestUpdateRouterFirmware(t *testing.T) {
+	routerIP := "10.133.35.158"
+	username := "admin"
+	password := "pck987"
+
+	tests := []struct {
+		desc          string
+		firmware      string
+		expectError   bool
+	}{
+		{
+			desc:        "valid firmware update - success",
+			firmware:    "v2.0.1",
+			expectError: false,
+		},
+		{
+			desc:        "empty firmware version",
+			firmware:    "",
+			expectError: true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.desc, func(t *testing.T) {
+			err := UpdateRouterFirmware(routerIP, username, password, test.firmware)
+
+			if (err != nil) != test.expectError {
+				t.Errorf("TestUpdateRouterFirmware() for firmware '%s' got error %v, expectError %v", test.firmware, err, test.expectError)
+			}
+		})
+	}
+}
+---------------------------------------------------------------------------
+router sytesm information
+
+package router
+
+import (
+	"testing"
+)
+
+// RouterSystemInfo represents the system information of the router.
+type RouterSystemInfo struct {
+	Model      string
+	Firmware   string
+	Serial     string
+	Uptime     string
+	Interfaces []string
+}
+
+// GetRouterSystemInfo retrieves the system information of the router.
+func GetRouterSystemInfo(routerIP, username, password string) (*RouterSystemInfo, error) {
+	// Your implementation goes here.
+
+	// Additional logic here for retrieving the router's system information.
+	// You would replace this with your actual system information retrieval logic.
+
+	// For the sake of this example, let's assume it returns a sample system information.
+	info := &RouterSystemInfo{
+		Model:      "RouterXYZ",
+		Firmware:   "v2.1.0",
+		Serial:     "ABC123",
+		Uptime:     "5 days",
+		Interfaces: []string{"eth0", "eth1", "eth2"},
+	}
+
+	return info, nil
+}
+
+// TestGetRouterSystemInfo tests the GetRouterSystemInfo function.
+func TestGetRouterSystemInfo(t *testing.T) {
+	routerIP := "10.133.35.158"
+	username := "admin"
+	password := "pck987"
+
+	expectedInfo := &RouterSystemInfo{
+		Model:      "RouterXYZ",
+		Firmware:   "v2.1.0",
+		Serial:     "ABC123",
+		Uptime:     "5 days",
+		Interfaces: []string{"eth0", "eth1", "eth2"},
+	}
+
+	t.Run("valid system information retrieval", func(t *testing.T) {
+		info, err := GetRouterSystemInfo(routerIP, username, password)
+
+		if err != nil {
+			t.Errorf("TestGetRouterSystemInfo() got unexpected error: %v", err)
+		}
+
+		if !compareRouterSystemInfo(info, expectedInfo) {
+			t.Errorf("TestGetRouterSystemInfo() got info %+v, expectedInfo %+v", info, expectedInfo)
+		}
+	})
+}
+
+// compareRouterSystemInfo compares two RouterSystemInfo instances for equality.
+func compareRouterSystemInfo(a, b *RouterSystemInfo) bool {
+	return a.Model == b.Model &&
+		a.Firmware == b.Firmware &&
+		a.Serial == b.Serial &&
+		a.Uptime == b.Uptime &&
+		sliceEqual(a.Interfaces, b.Interfaces)
+}
+
+// sliceEqual checks if two slices are equal.
+func sliceEqual(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+	
+----------------------------------------------------------------------------------------------------------------------------------------
+router health cheack 
+package router
+
+import (
+	"testing"
+)
+
+// HealthCheckResult represents the result of a health check on the router.
+type HealthCheckResult struct {
+	Success      bool
+	ErrorDetails string
+}
+
+// PerformRouterHealthCheck performs a health check on the router.
+func PerformRouterHealthCheck(routerIP, username, password string) (*HealthCheckResult, error) {
+	// Your implementation goes here.
+
+	// Additional logic here for performing a health check on the router.
+	// You would replace this with your actual health check logic.
+
+	// For the sake of this example, let's assume a successful health check.
+	return &HealthCheckResult{
+		Success: true,
+	}, nil
+}
+
+// TestPerformRouterHealthCheck tests the PerformRouterHealthCheck function.
+func TestPerformRouterHealthCheck(t *testing.T) {
+	routerIP := "10.133.35.158"
+	username := "admin"
+	password := "pck987"
+
+	expectedResult := &HealthCheckResult{
+		Success: true,
+	}
+
+	t.Run("successful health check", func(t *testing.T) {
+		result, err := PerformRouterHealthCheck(routerIP, username, password)
+
+		if err != nil {
+			t.Errorf("TestPerformRouterHealthCheck() got unexpected error: %v", err)
+		}
+
+		if !compareHealthCheckResult(result, expectedResult) {
+			t.Errorf("TestPerformRouterHealthCheck() got result %+v, expectedResult %+v", result, expectedResult)
+		}
+	})
+}
+
+// compareHealthCheckResult compares two HealthCheckResult instances for equality.
+func compareHealthCheckResult(a, b *HealthCheckResult) bool {
+	return a.Success == b.Success &&
+		a.ErrorDetails == b.ErrorDetails
+}
+---------------------------------------------------------------------------------------------
+show version 
+
+package router
+
+import (
+	"testing"
+)
+
+// RouterVersionInfo represents the version information of the router.
+type RouterVersionInfo struct {
+	Version string
+}
+
+// GetRouterVersionInfo retrieves the version information of the router.
+func GetRouterVersionInfo(routerIP, username, password string) (*RouterVersionInfo, error) {
+	// Your implementation goes here.
+
+	// Additional logic here for retrieving the router's version information.
+	// You would replace this with your actual version information retrieval logic.
+
+	// For the sake of this example, let's assume it returns a sample version information.
+	return &RouterVersionInfo{
+		Version: "v2.1.0",
+	}, nil
+}
+
+// TestGetRouterVersionInfo tests the GetRouterVersionInfo function.
+func TestGetRouterVersionInfo(t *testing.T) {
+	routerIP := "10.133.35.158"
+	username := "admin"
+	password := "pck987"
+
+	expectedInfo := &RouterVersionInfo{
+		Version: "v2.1.0",
+	}
+
+	t.Run("valid version information retrieval", func(t *testing.T) {
+		info, err := GetRouterVersionInfo(routerIP, username, password)
+
+		if err != nil {
+			t.Errorf("TestGetRouterVersionInfo() got unexpected error: %v", err)
+		}
+
+		if !compareRouterVersionInfo(info, expectedInfo) {
+			t.Errorf("TestGetRouterVersionInfo() got info %+v, expectedInfo %+v", info, expectedInfo)
+		}
+	})
+}
+
+// compareRouterVersionInfo compares two RouterVersionInfo instances for equality.
+func compareRouterVersionInfo(a, b *RouterVersionInfo) bool {
+	return a.Version == b.Version
+}
+
+-----------------------------------------------------------------------------------------------------------
+tcs@tcs-HP-Compaq-Elite-8300-SFF:~/ondatra1/ondatra$ hello2_test.go
+hello2_test.go: command not found
+tcs@tcs-HP-Compaq-Elite-8300-SFF:~/ondatra1/ondatra$ vi hello2_test.go
+tcs@tcs-HP-Compaq-Elite-8300-SFF:~/ondatra1/ondatra$ go test -v hello2_test.go
+# command-line-arguments [command-line-arguments.test]
+./hello2_test.go:62:13: undefined: SomeError
+FAIL    command-line-arguments [build failed]
+FAIL
+tcs@tcs-HP-Compaq-Elite-8300-SFF:~/ondatra1/ondatra$ vi hello2_test.go
+tcs@tcs-HP-Compaq-Elite-8300-SFF:~/ondatra1/ondatra$ vi hello2_test.go
+tcs@tcs-HP-Compaq-Elite-8300-SFF:~/ondatra1/ondatra$ vi hello2_test.go
+tcs@tcs-HP-Compaq-Elite-8300-SFF:~/ondatra1/ondatra$ go test -v hello2_test.go
+=== RUN   TestSendCommandToRouter
+=== RUN   TestSendCommandToRouter/valid_command_-_success
+=== RUN   TestSendCommandToRouter/invalid_command
+--- PASS: TestSendCommandToRouter (0.00s)
+    --- PASS: TestSendCommandToRouter/valid_command_-_success (0.00s)
+    --- PASS: TestSendCommandToRouter/invalid_command (0.00s)
+PASS
+ok      command-line-arguments  0.002s
+--------------------------------------------------------------------------------------------------------------------------------------
